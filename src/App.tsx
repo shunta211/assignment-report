@@ -17,6 +17,8 @@ export default function App() {
   const [basemaps, setBasemaps] = useState<Basemap[]>([]);
   const [selectedId, setSelectedId] = useState<string>('');
 
+  const geojsonUrl = 'https://raw.githubusercontent.com/smartnews-smri/japan-topography/main/data/municipality/geojson/s0001/N03-21_210101.json';
+
   useEffect(() => {
     fetch('/basemaps.json')
       .then(res => res.json())
@@ -25,6 +27,33 @@ export default function App() {
         setSelectedId(data.defaultId);
       });
   }, []);
+    // 地図にGeoJSONを追加
+    function addMunicipalityLayer(map: maplibregl.Map) {
+      // 既存のレイヤーがあれば削除
+      // if (map.getLayer('municipality-fill')) {
+      //   map.removeLayer('municipality-fill');
+      // }
+      if (map.getLayer('municipality-outline')) {
+        map.removeLayer('municipality-outline');
+      }
+      if (map.getSource('municipality')) {
+        map.removeSource('municipality');
+      }
+
+      map.addSource('municipality', {
+        type: 'geojson',
+        data: geojsonUrl,
+      });
+      map.addLayer({
+        id: 'municipality-outline',
+        type: 'line',
+        source: 'municipality',
+        paint: {
+          'line-color': '#003399',
+          'line-width': 1,
+        },
+      });
+    }
 
   // 地図描画・スタイル切替
   useEffect(() => {
@@ -61,8 +90,24 @@ export default function App() {
         zoom: 12,
       });
       mapRef.current.addControl(new maplibregl.NavigationControl(), 'top-left');
+      // GeoJSONの追加
+      mapRef.current.on('load', () => {
+       addMunicipalityLayer(mapRef.current!);
+      });
     } else {
-      mapRef.current.setStyle(style);
+      const map = mapRef.current;
+      //まずレイヤー/ソースを削除（旧スタイルからの残り）
+      if (map.getLayer('municipality-fill')) map.removeLayer('municipality-fill');
+      if (map.getLayer('municipality-outline')) map.removeLayer('municipality-outline');
+      if (map.getSource('municipality')) map.removeSource('municipality');
+      //GeoJSONを再追加
+      // mapRef.current.on('style.load', () => {
+      //  addMunicipalityLayer(mapRef.current!);
+      // });
+      map.setStyle(style);
+      map.once('styledata', () => {
+      addMunicipalityLayer(map);
+      });
     }
   }, [basemaps, selectedId]);
 
