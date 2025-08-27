@@ -47,12 +47,19 @@ http://localhost:5173
 地図の移動・ズーム可能（ナビゲーションコントロール付き）
 右上セレクトボックスで背景地図の切り替え
 basemaps.jsonの内容を自動で読み込み反映
+GeoJSONを利用して、区市町村のポリゴンを地図上に表示する (追加課題)
 
 ## 参考
 - Mapbox GL JSで地理院地図Vector風の地図を表示するサンプル: https://github.com/gsi-cyberjapan/gsivectortile-mapbox-gl-js
 - Free basemap tiles for MapLibre: https://medium.com/@go2garret/free-basemap-tiles-for-maplibre-18374fab60cb
 - React + MapLibre サンプル: https://visgl.github.io/react-maplibre/examples/
+- 区市町村の地理データサンプル: https://github.com/smartnews-smri/japan-topography/blob/main/data/municipality/geojson/s0001/N03-21_210101.json　(追加課題)
 
 ## 備考
+課題
 作業にかかった時間：約6時間（要件理解、学習時間含む）
+要所でAI(ChatGPT,Perplexity等)を活用しました。
+
+追加課題
+作業にかかった時間：約4時間（要件理解、学習時間含む）
 要所でAI(ChatGPT,Perplexity等)を活用しました。
